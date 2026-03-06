@@ -5,16 +5,23 @@ namespace App\Livewire;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Posts extends Component
 {
-    public $title, $body, $postForm = false, $editForm=false, $postId;
+    use WithPagination;
+    public $title, $body, $postForm = false, $editForm=false, $postId, $search;
 
     public function render()
     {
-        // Clear the internal cache to ensure we get fresh data from DB
         return view('livewire.posts', [
-            'posts' => Post::where('id', '>', 0)->latest()->get()
+            'posts' => Post::query()
+                ->where(function ($query) {
+                    $query->where('title', 'like', "%{$this->search}%")
+                        ->orWhere('body', 'like', "%{$this->search}%");
+                })
+                ->latest()
+                ->paginate(10)
         ]);
     }
 

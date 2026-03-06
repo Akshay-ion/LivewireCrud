@@ -15,6 +15,9 @@
         @include('livewire.postEdit')
     @endif
 
+    <div class="mt-3">
+        <input type="text" class="form-control" name="search" wire:model.live="search" placeholder="Search Post">
+    </div>
     <div
         class="table-responsive mt-3"
     >
@@ -47,6 +50,7 @@
                 @endforelse
             </tbody>
         </table>
+        {{ $posts->links() }}
     </div>
 
 </div>
