@@ -81,6 +81,23 @@ class Posts extends Component
         $this->editForm = true;
     }
 
+    public function editPostModal($id){
+        $post = Post::find($id);
+
+        if($post->user_id != Auth::id()){
+            session()->flash('error', 'Unauthenticated');
+            $this->resetFields();
+            $this->closeEdit();
+            return;
+        }
+
+        $this->title = $post->title;
+        $this->body = $post->body;
+        $this->postId = $post->id;
+        $this->postForm = false;
+        $this->dispatch('open-edit-modal');
+    }
+
     public function updatePost(){
         $this->validate([
             'title' => 'required',
@@ -104,6 +121,8 @@ class Posts extends Component
         session()->flash('success', "Post Updated Successfully");
         $this->resetFields();
         $this->editForm = false;
+        $this->dispatch('close-edit-modal');
+
     }
 
     public function deletePost($id){
