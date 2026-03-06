@@ -13,7 +13,7 @@
             </div>
             <div class="form-group">
                 <label for="body" class="form-label">Body</label>
-                <textarea class="form-control @error("title") is-invalid @enderror" wire:model="body"></textarea>
+                <textarea class="form-control @error("body") is-invalid @enderror" wire:model="body"></textarea>
                 @error("body")
                     <p class="text-danger">{{ $message }}</p>
                 @enderror

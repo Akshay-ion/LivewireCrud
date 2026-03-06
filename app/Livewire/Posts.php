@@ -56,6 +56,8 @@ class Posts extends Component
         session()->flash('success', "Post Created Successfully");
         $this->resetFields();
         $this->postForm = false;
+
+        $this->dispatch('close-modal');
     }
 
     public function closeEdit(){
