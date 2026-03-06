@@ -10,6 +10,11 @@
     @else
         <button class="btn btn-primary" wire:click="addPost()">Create Post</button>
     @endif
+
+    @if ($editForm)
+        @include('livewire.postEdit')
+    @endif
+
     <div
         class="table-responsive mt-3"
     >
@@ -26,11 +31,13 @@
             </thead>
             <tbody>
                 @forelse ($posts as $post)
-                    <tr>
+                    <tr wire:key="post-{{ $post->id }}">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $post->title }}</td>
                         <td>{{ $post->body }}</td>
-                        <td></td>
+                        <td>
+                            <button class="btn btn-info btn-sm" wire:click="editPost({{$post->id}})">Edit</button>
+                        </td>
                     </tr>
                 @empty
                     <tr>

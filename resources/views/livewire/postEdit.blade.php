@@ -1,8 +1,8 @@
 <div class="card mb-2">
     <div class="card-header">
-        Create Post
+        Edit Post
     </div>
-    <form wire:submit="storePost()">
+    <form wire:submit="updatePost()">
         <div class="card-body">
             <div class="form-group">
                 <label for="title" class="form-label">Title</label>
@@ -20,8 +20,8 @@
             </div>
         </div>
         <div class="card-footer d-flex justify-content-end">
-            <button class="btn btn-success">Save</button>
-            <button type="button" class="btn btn-secondary mx-2" wire:click="closePost()">Cancel</button>
+            <button class="btn btn-success">Update</button>
+            <button type="button" class="btn btn-secondary mx-2" wire:click="closeEdit()">Cancel</button>
         </div>
     </form>
 </div>

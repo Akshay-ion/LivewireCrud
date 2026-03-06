@@ -8,15 +8,17 @@ use Livewire\Component;
 
 class Posts extends Component
 {
-    public $posts, $title, $body, $postForm = false;
+    public $title, $body, $postForm = false, $editForm=false, $postId;
 
     public function render()
     {
-        $this->posts = Post::latest()->get();
-        return view('livewire.posts');
+        return view('livewire.posts', [
+            'posts' => Post::latest()->get()
+        ]);
     }
 
     public function addPost(){
+        $this->editForm = false;
         $this->postForm = true;
     }
 
@@ -27,7 +29,6 @@ class Posts extends Component
     public function resetFields(){
         $this->title = "";
         $this->body = "";
-        $this->postForm = false;
     }
 
     public function storePost(){
@@ -45,5 +46,52 @@ class Posts extends Component
 
         session()->flash('success', "Post Created Successfully");
         $this->resetFields();
+        $this->postForm = false;
+    }
+
+    public function closeEdit(){
+        $this->editForm = false;
+    }
+
+    public function editPost($id){
+        $post = Post::find($id);
+
+        if($post->user_id != Auth::id()){
+            session()->flash('error', 'Unauthenticated');
+            $this->resetFields();
+            $this->closeEdit();
+            return;
+        }
+
+        $this->title = $post->title;
+        $this->body = $post->body;
+        $this->postId = $post->id;
+        $this->postForm = false;
+        $this->editForm = true;
+    }
+
+    public function updatePost(){
+        $this->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        $post = Post::find($this->postId);
+
+        if($post->user_id != Auth::id()){
+            session()->flash('error', 'Unauthenticated');
+            $this->resetFields();
+            $this->closeEdit();
+            return;
+        }
+
+        $post->update([
+            'title' => $this->title,
+            'body' => $this->body,
+        ]);
+
+        session()->flash('success', "Post Updated Successfully");
+        $this->resetFields();
+        $this->editForm = false;
     }
 }
