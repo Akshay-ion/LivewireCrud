@@ -8,7 +8,7 @@
     @if($postForm)
         @include('livewire.postCreate')
     @else
-        <button class="btn btn-primary" wire:click="addPost()">Create Post</button>
+        <button class="btn btn-primary m-2" wire:click="addPost()">Create Post</button>
     @endif
 
     @if ($editForm)
@@ -29,7 +29,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody wire:key="posts-list-{{ count($posts) }}">
                 @forelse ($posts as $post)
                     <tr wire:key="post-{{ $post->id }}">
                         <td>{{ $loop->iteration }}</td>
@@ -37,6 +37,7 @@
                         <td>{{ $post->body }}</td>
                         <td>
                             <button class="btn btn-info btn-sm" wire:click="editPost({{$post->id}})">Edit</button>
+                            <button class="btn btn-danger btn-sm mx-1" wire:confirm="Are you sure delete this post?" wire:click="deletePost({{$post->id}})">Delete</button>
                         </td>
                     </tr>
                 @empty

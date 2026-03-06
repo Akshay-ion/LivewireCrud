@@ -12,8 +12,9 @@ class Posts extends Component
 
     public function render()
     {
+        // Clear the internal cache to ensure we get fresh data from DB
         return view('livewire.posts', [
-            'posts' => Post::latest()->get()
+            'posts' => Post::where('id', '>', 0)->latest()->get()
         ]);
     }
 
@@ -29,6 +30,7 @@ class Posts extends Component
     public function resetFields(){
         $this->title = "";
         $this->body = "";
+        $this->postId = null;
     }
 
     public function storePost(){
@@ -93,5 +95,18 @@ class Posts extends Component
         session()->flash('success', "Post Updated Successfully");
         $this->resetFields();
         $this->editForm = false;
+    }
+
+    public function deletePost($id){
+        $post = Post::find($id);
+
+        if($post->user_id != Auth::id()){
+            session()->flash('error', 'Unauthenticated');
+            return;
+        }
+
+        $post->delete();
+
+        session()->flash('success', "Post Deleted Successfully");
     }
 }
